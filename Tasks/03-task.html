@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 03</title>
+
+    <style>
+        .form-group {
+            margin: 4px;
+        }
+
+        .form-group label {
+            width: 75px;
+            display: inline-block;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            width: 300px;
+        }
+
+        th, td {
+            border: 1px solid gray;
+            padding: 4px 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <form name="writeForm">
+        <div class="form-group">
+            <label>Ключ</label>
+            <input type="text" name="keyInput" required>
+        </div>
+        <div class="form-group">
+            <label>Значение</label>
+            <input type="text" name="valueInput" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Запись">
+        </div>
+    </form>
+
+    <br>
+
+    <form name="readForm">
+        <div class="form-group">
+            <label>Ключ</label>
+            <input type="text" name="keyInput" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Чтение">
+        </div>
+    </form>
+
+    <br>
+
+    <button id="showAllBtn">Показать все</button>
+    <button id="clearStorageBtn">Очистить localStorage</button>
+
+    <div id="tableContainer"></div>
+
+    <script>
+        /*
+        Задание:
+        Добавьте на страницу кнопку "Показать все". При клике по этой кнопке на странице
+        должна появится или обновляется таблица с содержимым localStorrage. Первая колонка таблицы - ключ, вторая - значение.
+        
+        Добавьте на страницу кнопку "Очистить localStorage". При нажатии на кнопку localStorage должен быть очищен.
+        */
+        document.forms.writeForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = document.forms.writeForm;
+
+            let key = form.keyInput.value;
+            let value = form.valueInput.value;
+
+            localStorage.setItem(key, value); 
+            form.reset();
+        });
+
+        document.forms.readForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = document.forms.readForm;
+            let key = form.keyInput.value;
+
+            let value = localStorage.getItem(key); 
+            alert(value);
+        });
+
+        const showAllBtn = document.querySelector("#showAllBtn");
+        const clearStorageBtn = document.querySelector("#clearStorageBtn");
+        const tableContainer = document.querySelector("#tableContainer");
+
+
+        showAllBtn.addEventListener("click", function () {
+
+            tableContainer.innerHTML = "";
+
+            if (localStorage.length === 0) {
+                tableContainer.textContent = "LocalStorage пуст.";
+                return;
+            }
+
+            let table = document.createElement("table");
+
+            let thead = document.createElement("thead");
+
+            let tbody = document.createElement("tbody");
+
+            let headerRow = document.createElement("tr");
+            let thKey = document.createElement("th");
+
+            thKey.textContent = "Ключ";
+
+            let thValue = document.createElement("th");
+            thValue.textContent = "Значение";
+
+            headerRow.append(thKey, thValue);
+            thead.appendChild(headerRow);
+
+            for (let i = 0; i < localStorage.length; i++) {
+
+                let key = localStorage.key(i);
+                let value = localStorage.getItem(key);
+
+                let row = document.createElement("tr");
+                let tdKey = document.createElement("td");
+
+                tdKey.textContent = key;
+                let tdValue = document.createElement("td");
+
+                tdValue.textContent = value;
+
+                row.append(tdKey, tdValue);
+                tbody.appendChild(row);
+
+            }
+
+            table.append(thead, tbody);
+            tableContainer.appendChild(table);
+        });
+
+        clearStorageBtn.addEventListener("click", function () {
+
+            localStorage.clear();
+            tableContainer.innerHTML = "";
+
+        });
+    </script>
+</body>
+
+</html>
